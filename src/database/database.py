@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker   
-from config import config_variables
+from src.config import config_variables
 
 settings = config_variables.Settings()
 # Variables de entorno para no exponer información sensible
