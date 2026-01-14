@@ -1,12 +1,15 @@
-import os
-from dotenv import load_dotenv
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-load_dotenv()
-   
-class Settings:
-    DB_USER: str = os.getenv("DB_USER", "default_user")
-    DB_PASSWORD: str = os.getenv("DB_PASSWORD", "default_password")
-    DB_HOST: str = os.getenv("DB_HOST", "localhost")
-    DB_NAME: str = os.getenv("DB_NAME", "test_db")
-   
+class Settings(BaseSettings):
+    # Base de datos
+    DB_USER: str
+    DB_PASSWORD: str
+    DB_HOST: str
+    DB_PORT: int = 3306 # Puerto por defecto de MySQL
+    DB_NAME: str
+
+    # Seguridad (Auth)
+    SECRET_KEY: str
+    ALGORITHM: str
+
 settings = Settings()
