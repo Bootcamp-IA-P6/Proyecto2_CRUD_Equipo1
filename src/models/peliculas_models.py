@@ -25,9 +25,9 @@ class Pelicula(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     id_director = Column(Integer, ForeignKey("directores.id"))
-    titulo = Column(String, index=True, nullable=False)
+    titulo = Column(String(100), index=True, nullable=False)
     anio = Column(Integer)
-    descripcion = Column(String)
+    descripcion = Column(String(200))
 
     director = relationship("Director", back_populates="peliculas")
     generos = relationship(
