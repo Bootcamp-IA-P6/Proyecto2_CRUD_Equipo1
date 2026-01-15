@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from database.database import Base
-
+from src.database.base import Base
 
 class Director(Base):
     __tablename__ = "directores"
@@ -11,14 +10,12 @@ class Director(Base):
     anio_nacimiento = Column(Integer)
     
     peliculas = relationship("Pelicula", back_populates="director")
-
-
+    
 class Genero(Base):
     __tablename__ = "generos"
     
     id = Column(Integer, primary_key=True, index=True)
     nombre = Column(String, nullable=False)
-
 
 class Pelicula(Base):
     __tablename__ = "peliculas"
@@ -35,7 +32,6 @@ class Pelicula(Base):
         secondary="peliculas_genero",
         backref="peliculas"
     )
-
 
 class PeliculasGenero(Base):
     __tablename__ = "peliculas_genero"

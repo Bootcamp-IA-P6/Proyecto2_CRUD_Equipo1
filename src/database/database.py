@@ -1,32 +1,18 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker   
-from src.config import config_variables
+from sqlalchemy.orm import sessionmaker
+from src.config.config_variables import settings
+from src.database.base import Base 
 
-settings = config_variables.Settings()
-# Variables de entorno para no exponer información sensible
-DB_USER = settings.DB_USER
-DB_PASSWORD = settings.DB_PASSWORD
-DB_HOST = settings.DB_HOST
-DB_NAME = settings.DB_NAME
+# Fíjate que añadimos :{settings.DB_PORT}
+DATABASE_URL = f"mysql+pymysql://{settings.DB_USER}:{settings.DB_PASSWORD}@{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}"
 
-# Conexión con la base de datos
-DATABASE_URL = "mysql+pymysql://"+DB_USER+":"+DB_PASSWORD+"@"+DB_HOST+"/"+DB_NAME+""  # MySQL
+engine = create_engine(DATABASE_URL, echo=True)
 
-# Crea un engine
-engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Crea una clase para configurar la sesión
-Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# Crea una clase base para los modelos
-Base = declarative_base()
-
-# función para obtener la sesión de la base de datos
 def get_db():
-    db = Session()  # Crea una nueva sesión
+    db = SessionLocal()
     try:
-        yield db  # Usa la sesión
-        print("DB session used")
+        yield db
     finally:
-        db.close()  # Cierra la sesión al terminar
-        print("DB session closed")
+        db.close()
