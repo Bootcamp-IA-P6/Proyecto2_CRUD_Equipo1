@@ -6,7 +6,7 @@ class Director(Base):
     __tablename__ = "directores"
     
     id = Column(Integer, primary_key=True, index=True)
-    nombre = Column(String, nullable=False)
+    nombre = Column(String(100), nullable=False)
     anio_nacimiento = Column(Integer)
     
     peliculas = relationship("Pelicula", back_populates="director")
@@ -15,16 +15,16 @@ class Genero(Base):
     __tablename__ = "generos"
     
     id = Column(Integer, primary_key=True, index=True)
-    nombre = Column(String, nullable=False)
+    nombre = Column(String(100), nullable=False)
 
 class Pelicula(Base):
     __tablename__ = "peliculas"
 
     id = Column(Integer, primary_key=True, index=True)
     id_director = Column(Integer, ForeignKey("directores.id"))
-    titulo = Column(String, index=True, nullable=False)
+    titulo = Column(String(100), index=True, nullable=False)
     anio = Column(Integer)
-    descripcion = Column(String)
+    descripcion = Column(String(200))
 
     director = relationship("Director", back_populates="peliculas")
     generos = relationship(
