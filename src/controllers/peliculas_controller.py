@@ -57,7 +57,7 @@ def update_pelicula(db: Session, pelicula_id: int, pelicula_update: PeliculaUpda
              if len(db_generos) != len(generos_ids):
                  raise HTTPException(status_code=404, detail="Uno o más géneros no existen")
              
-             db_pelicula.generos = db_generos # Reemplaza la relación
+             db_pelicula.generos = db_generos 
 
     for key, value in update_data.items():
         setattr(db_pelicula, key, value)
