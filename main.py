@@ -10,6 +10,7 @@ from src.models import peliculas_models
 from src.routes import user_routes  
 from src.routes import directores_routes
 from src.routes import genero_routes
+from src.routes import peliculas_routes
 
 app = FastAPI(title="Catálogo de Películas AI")
 
@@ -26,3 +27,4 @@ async def root():
 app.include_router(user_routes.router, prefix="/api/v1")
 app.include_router(genero_routes.router, prefix="/api/v1")
 app.include_router(directores_routes.router, prefix="/api/v1")
+app.include_router(peliculas_routes.router, prefix="/api/v1")
