@@ -10,11 +10,17 @@ from src.models import peliculas_models
 from src.routes import user_routes  
 from src.routes import directores_routes
 from src.routes import genero_routes
+from src.routes import peliculas_routes
 
-app = FastAPI(title="Catálogo de Películas AI")
+from contextlib import asynccontextmanager
 
-# 3. CREAR TABLAS
-Base.metadata.create_all(bind=engine)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # 3. CREAR TABLAS AL INICIAR
+    Base.metadata.create_all(bind=engine)
+    yield
+
+app = FastAPI(title="Catálogo de Películas AI", lifespan=lifespan)
 
 @app.get("/")
 async def root():
@@ -26,3 +32,4 @@ async def root():
 app.include_router(user_routes.router, prefix="/api/v1")
 app.include_router(genero_routes.router, prefix="/api/v1")
 app.include_router(directores_routes.router, prefix="/api/v1")
+app.include_router(peliculas_routes.router, prefix="/api/v1")
