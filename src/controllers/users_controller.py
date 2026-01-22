@@ -7,9 +7,9 @@ from src.utils.security import get_password_hash
 # --- CREATE ---
 def create_user(db: Session, user: UserCreate):
     if db.query(User).filter(User.email == user.email).first():
-        raise HTTPException(status_code=400, detail="El email ya existe")
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="El email ya existe")
     if db.query(User).filter(User.username == user.username).first():
-        raise HTTPException(status_code=400, detail="El username ya existe")
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="El username ya existe")
 
     new_user = User(
         username=user.username,
@@ -26,7 +26,7 @@ def create_user(db: Session, user: UserCreate):
 def get_user(db: Session, user_id: int):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
-        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")
     return user
 
 # --- READ ALL (Con paginación básica) ---
@@ -44,12 +44,12 @@ def update_user(db: Session, user_id: int, user_update: UserUpdate):
     if "email" in update_data:
         check_email = db.query(User).filter(User.email == update_data["email"]).first()
         if check_email and check_email.id != user_id: #type: ignore
-            raise HTTPException(status_code=400, detail="Ese email ya está siendo usado por otro usuario")
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Ese email ya está siendo usado por otro usuario")
 
     if "username" in update_data:
         check_username = db.query(User).filter(User.username == update_data["username"]).first()
         if check_username and check_username.id != user_id: #type: ignore
-            raise HTTPException(status_code=400, detail="Ese username ya está ocupado")
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Ese username ya está ocupado")
 
     # 3. Si se actualiza el password, hay que hashearlo de nuevo
     if "password" in update_data:
