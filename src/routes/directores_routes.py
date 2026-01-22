@@ -12,6 +12,14 @@ router = APIRouter(prefix="/directores", tags=["Directores"])
 def create_director(director: DirectorCreate, db: Session = Depends(get_db)):
     return directores_controller.create_director(db, director)
 
+@router.post("/bulk",response_model=List[DirectorResponse],status_code=status.HTTP_201_CREATED)
+def create_directores_bulk(
+    directores: List[DirectorCreate],
+    db: Session = Depends(get_db)
+):
+    return directores_controller.create_directores_bulk(db, directores)
+
+
 # 2. Obtener todos (Lista)
 @router.get("/", response_model=List[DirectorResponse])
 def read_directores(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):

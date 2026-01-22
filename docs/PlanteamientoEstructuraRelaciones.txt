@@ -1,0 +1,102 @@
+Parto de las instrucciones dadas en:
+https://github.com/Factoria-F5-madrid/CRUD-django_rest_framework
+A partir de ahí (con mucha ayuda) subí los archivos:
+c:\Users\Coder\Proyectos\CRUD-django_rest_frameworkGPT.3.txt	8.928	2026-01-15 15.51	-a--
+c:\Users\Coder\Proyectos\CRUD-django_rest_frameworkGPT.zip	15.696	2026-01-15 15.05	-a—
+Y has generado la estructura (tipo tree) desde la que me baso.
+1.	Me ha comentado un compañero (RAML) que quizás la estructura es redundante.
+	RAML me ha indicado páginas con documentación:
+	https://www.geeksforgeeks.org/python/django-rest-api-crud-with-drf/
+	Archivo:
+	c:\Users\Coder\OneDrive\Documentos\Apuntes\Apuntes20260116V.Django REST API - CRUD with DRF - GeeksforGeeks.V20260116092523.pdf	721.642	2026-01-16 09.25	-a--
+	He leído esos apuntes tomados desde:
+	https://www.geeksforgeeks.org/python/django-rest-api-crud-with-drf/
+	RAML también me ha indicado que consulte en Google:
+	Django docs
+	Django documentación.
+	Esto en google.
+	Crud Django documentación.
+2.	Por otra parte, de otro compañero (JoLa) he intentado entender que es necesario comprender la estructura de lo que estoy haciendo.
+	Quizás sea necesario renombrar carpetas de forma que quede claro donde está cada parte (Frontend y Backend).
+	Esto es:
+	Front/ -> Frontend
+	libreria/ -> Backend
+	¿Qué piensas de esto?.
+	¿Cambiar estos nombres puede afectar al código fuente?.
+	Ejemplos:
+		Quizás 
+		CRUD-django_rest_frameworkGPT.zip\
+			CRUD-django_rest_framework\
+				libreria\
+					libreria\
+		debería pasar a llamarse:
+		[...].zip\
+			CRUD-django_rest_framework\
+				Backend\
+					ProyectDjangolibreria\
+		CRUD-django_rest_frameworkGPT.zip\
+			CRUD-django_rest_framework\
+				libreria\
+					libros\
+		debería pasar a llamarse:
+		CRUD-django_rest_frameworkGPT.zip\
+			CRUD-django_rest_framework\
+				Backend\
+					AppDjangolibreria_libros\
+		¿Debería implentarse la app?
+						AppDjangolibreria_categorias\
+		¿Si fuera necesaria, en qué nivel dentro de la supuesta carpeta Backend\ debería implementarse (categorías se refiere a la App libros)?
+	¿Sería necesario volver a seguir los pasos de Factoria-F5-madrid/CRUD-django_rest_framework de forma adaptada (.venv, Django,…) ?,
+	¿en qué orden?.
+	CRUD-django_rest_frameworkGPT.zip es el nombre del contenedor .zip de la estructura del proyecto CRUD-django_rest_framework.
+3.	Otra compañera (MarC) me indica que debo analizar, comprender y saber refactorizar el código.
+	Este punto hace que deba leer, y , comprender el código dentro de la estructura que lo contiene (es decir las relaciones establecidas en cada uno de los distintos archivos).
+	Para ello sería necesario poder tener ese código visible, debería poder generar archivos de texto que tuvieran el código dentro de su correspondiente estructura, que se mostrasen las relaciones entre los distintos archivos del código.
+	¿Puedes darme una respuesta en la que se muestren los archivos de código fuente:
+	-Con su nombre y rutas actuales dentro del proyecto:
+		Ejemplo:
+		""" 
+		Nombre y ruta del archivo
+			CRUD-django_rest_framework/Front/app.py
+		Función:
+			Cliente o capa frontal (probablemente pruebas o consumo de la API REST)
+			No forma parte del core de Django, pero interactúa con él
+		Nombre y rutas sugeridos
+			CRUD-django_rest_framework/Frontend/app.py
+		Funciones sugeridas:
+			Posibles añadidos al código
+		Redundancia:
+			En este caso el archivo es necesario en la estructura y no es redundante.
+		"""
+	-Con comentarios en el código en los que se indique qué es lo que hace cada una de las librerías, clases, funciones, métodos, parámetros, argumentos, variables, valores, ...
+	-Añade a estos comentarios las relaciones con otras partes/archivos de código dentro del proyecto.
+	-Analiza si hay redundancia.
+	-Propón una refactorización siguiendo buenas prácticas de programación (clean code).
+	Esta propuesta de refactorización debe incluirse dentro del propio código de partida con comentarios.
+	Ejemplo:
+		"""
+		Esta parte del código, siguiendo prácticas de clean code,
+		se basa en las indicaciones contenidas en:
+		https://github.com/Factoria-F5-madrid/CRUD-django_rest_framework
+			además, al final se indican vínculos con más documentación a consultar.
+		https://www.geeksforgeeks.org/python/django-rest-api-crud-with-drf/
+			También, con distintos vínculos que documentan, ofrecidos en distintos pasos.
+		Sugerencia a la salida generada por IA:
+		#Nueva propuesta de código.
+			#Nuevo Código Propuesto Comentado Colocado Correctamente en cada sugerencia de modificación.
+		#Archivo/Código redundante
+		#Sí 
+			#redundante con 
+			#motivos de la redundancia.
+		#No redundante:
+			#Por qué es necesario y cuál es la función en la estructura.
+		"""
+	?
+Muestra cada archivo con su código siguiendo estas indicaciones.
+Intento pensar cada consulta que hago a cada IA (aun así, cometo errores), leer y comprender el contenido.
+A partir de ahí intento obtener unos apuntes con unos pasos a seguir.
+Todo esto da como resultado una información que, si no está estructurada, resumida y no se ve de forma secuencial puede resultar en un exceso.
+Porfa, porfa, ten en cuenta la estructura actual del proyecto y muestra cada parte de los archivos de código actuales añadiendo comentarios de este tipo. Debo partir de lo que tengo. Piensa profundamente antes de contestar. Hazme las preguntas que necesites para poder adaptar la respuesta. Tengo muchas limitaciones en mis capacidades y en el tiempo disponible. Es preferible una respuesta completa a muchas respuestas incompletas (puedes pedirme que aclare lo que necesites antes de darme una respuesta completa).
+Consulta, de forma razonable, los vínculos que te he dado o los que creas convenientes.
+
+20260116133701*
