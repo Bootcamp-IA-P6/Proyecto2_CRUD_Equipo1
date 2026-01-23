@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso - CinemaStream</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="container" id="container">
+    
+    <!-- FORMULARIO REGISTRO (Sign Up) -->
+    <div class="form-container sign-up-container">
+        <form id="registerForm">
+            <h1>Crear Cuenta</h1>
+            <span>usa tu correo para registrarte</span>
+            <input type="text" id="regUsername" placeholder="Usuario" required />
+            <input type="email" id="regEmail" placeholder="Email" required />
+            <input type="password" id="regPassword" placeholder="Contraseña" required />
+            <button type="submit">Registrarse</button>
+            <p id="reg-message" style="color: #e50914; display: none; margin-top: 10px;"></p>
+        </form>
+    </div>
+
+    <!-- FORMULARIO INICIO SESIÓN (Sign In) -->
+    <div class="form-container sign-in-container">
+        <form id="loginForm">
+            <h1>Iniciar Sesión</h1>
+            <span>usa tu cuenta existente</span>
+            <input type="text" id="loginUser" placeholder="Usuario" required />
+            <input type="password" id="loginPass" placeholder="Contraseña" required />
+            <a href="#">¿Olvidaste tu contraseña?</a>
+            <button type="submit">Ingresar</button>
+            <p id="login-message" style="color: #e50914; display: none; margin-top: 10px;"></p>
+        </form>
+    </div>
+
+    <!-- OVERLAY (Panel deslizante) -->
+    <div class="overlay-container">
+        <div class="overlay">
+            <!-- Panel izquierdo (Visible cuando quieres ir a Login) -->
+            <div class="overlay-panel overlay-left">
+                <h1>¡Bienvenido de nuevo!</h1>
+                <p>Para mantenerte conectado con nosotros por favor inicia sesión con tus datos personales</p>
+                <button class="ghost" id="signIn">Iniciar Sesión</button>
+            </div>
+            <!-- Panel derecho (Visible cuando quieres ir a Registro) -->
+            <div class="overlay-panel overlay-right">
+                <h1>¡Hola!</h1>
+                <p>Introduce tus datos personales y comienza tu viaje cinematográfico con nosotros</p>
+                <button class="ghost" id="signUp">Registrarse</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="margin-top: 20px;">
+    <a href="index.html" style="color: #888;">Volver al Catálogo</a>
+</div>
+
+<!-- Scripts -->
+<script src="js/common.js"></script>
+<script src="js/auth.js"></script>
+
+</body>
+</html>
