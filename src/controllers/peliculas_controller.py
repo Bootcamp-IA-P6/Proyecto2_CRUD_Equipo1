@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from src.models.peliculas_models import Pelicula, Director, Genero
 from src.schemas.peliculas_schemas import PeliculaCreate, PeliculaUpdate
+from typing import List
 
 # --- CREATE ---
 def create_pelicula(db: Session, pelicula: PeliculaCreate):
@@ -37,6 +38,28 @@ def create_pelicula(db: Session, pelicula: PeliculaCreate):
     db.commit()
     db.refresh(new_pelicula)
     return new_pelicula
+
+def create_pelicula_bulk(db: Session, peliculas: List[create_pelicula]):
+    nuevas_peliculas = []
+
+    for pelicula in peliculas:
+        new_pelicula = Pelicula(
+            titulo=pelicula.titulo,
+            anio=pelicula.anio,
+            descripcion=pelicula.descripcion,
+            id_director=pelicula.id_director
+    )
+
+        db.add(new_pelicula)
+        nuevas_peliculas.append(new_pelicula)
+
+    db.commit()
+
+    for pelicula in nuevas_peliculas:
+        db.refresh(pelicula)
+
+    return nuevas_peliculas
+
 
 # --- READ ONE ---
 def get_pelicula(db: Session, pelicula_id: int):

@@ -16,6 +16,10 @@ router = APIRouter(prefix="/peliculas", tags=["Peliculas"])
 def create_pelicula(pelicula: PeliculaCreate, db: Session = Depends(get_db)):
     return peliculas_controller.create_pelicula(db, pelicula)
 
+@router.post("/bulk", response_model=List[PeliculaResponse], status_code=status.HTTP_201_CREATED)
+def create_pelicula_bulk(peliculas: List[PeliculaCreate], db: Session = Depends(get_db)):
+    return peliculas_controller.create_pelicula_bulk(db, peliculas)
+
 # 2. Obtener todas (Lista)
 @router.get("/", response_model=List[PeliculaResponse], responses={200:{"description":"Lista de películas"}})
 def read_peliculas(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
