@@ -8,7 +8,10 @@ from src.controllers import directores_controller
 router = APIRouter(prefix="/directores", tags=["Directores"])
 
 # 1. Crear Director
-@router.post("/", response_model=DirectorResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=DirectorResponse, status_code=status.HTTP_201_CREATED, responses={
+    409:{"description": "Ya existe un director con ese nombre"},
+    422: {"description": "Datos inválidos"}
+})
 def create_director(director: DirectorCreate, db: Session = Depends(get_db)):
     return directores_controller.create_director(db, director)
 
@@ -26,17 +29,25 @@ def read_directores(skip: int = 0, limit: int = 100, db: Session = Depends(get_d
     return directores_controller.get_all_directores(db, skip=skip, limit=limit)
 
 # 3. Obtener uno por ID
-@router.get("/{director_id}", response_model=DirectorResponse)
+@router.get("/{director_id}", response_model=DirectorResponse, responses={
+    404: {"description": "Director no encontrado"}
+})
 def read_director(director_id: int, db: Session = Depends(get_db)):
     return directores_controller.get_director(db, director_id)
 
 # 4. Actualizar Director (PATCH)
-@router.patch("/{director_id}", response_model=DirectorResponse)
+@router.patch("/{director_id}", response_model=DirectorResponse, responses={
+    404: {"description": "Director no encontrado"},
+    409: {"description": "Nombre de director duplicado"},
+    422: {"description": "Datos inválidos"}
+})
 def update_director(director_id: int, director_update: DirectorUpdate, db: Session = Depends(get_db)):
     return directores_controller.update_director(db, director_id, director_update)
 
 # 5. Eliminar Director
-@router.delete("/{director_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{director_id}", status_code=status.HTTP_204_NO_CONTENT, responses={
+    404: {"description": "Director no encontrado"}
+})
 def delete_director(director_id: int, db: Session = Depends(get_db)):
     directores_controller.delete_director(db, director_id)
     return 

@@ -9,7 +9,7 @@ class PeliculaBase(BaseModel):
 
 class PeliculaCreate(PeliculaBase):
     id_director: int
-    generos: Optional[List[int]] = [] 
+    generos: Optional[List[int]] = Field(default_factory=list)
 
 # --- Schema para Actualización (PATCH) ---
 class PeliculaUpdate(BaseModel):

@@ -8,7 +8,17 @@ from typing import List
 def create_pelicula(db: Session, pelicula: PeliculaCreate):
     db_director = db.query(Director).filter(Director.id == pelicula.id_director).first()
     if not db_director:
-        raise HTTPException(status_code=404, detail="Director no encontrado")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Director no encontrado")
+
+# Verificar que No exista una pelicula con el mismo título
+    pelicula_existente = db.query(Pelicula).filter(
+        Pelicula.titulo == pelicula.titulo
+    ).first()
+    if pelicula_existente:
+        raise HTTPException(
+        status_code=status.HTTP_409_CONFLICT,
+        detail="Ya existe una película con ese título"
+    )
 
     new_pelicula = Pelicula(
         titulo=pelicula.titulo,
@@ -19,9 +29,8 @@ def create_pelicula(db: Session, pelicula: PeliculaCreate):
 
     if pelicula.generos:
         db_generos = db.query(Genero).filter(Genero.id.in_(pelicula.generos)).all()
-        
         if len(db_generos) != len(pelicula.generos):
-            raise HTTPException(status_code=404, detail="Uno o más géneros no existen")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Uno o más géneros no existen")
             
         new_pelicula.generos.extend(db_generos)
 
@@ -56,7 +65,7 @@ def create_pelicula_bulk(db: Session, peliculas: List[create_pelicula]):
 def get_pelicula(db: Session, pelicula_id: int):
     pelicula = db.query(Pelicula).filter(Pelicula.id == pelicula_id).first()
     if not pelicula:
-        raise HTTPException(status_code=404, detail="Película no encontrada")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Película no encontrada")
     return pelicula
 
 # --- READ ALL ---
@@ -68,19 +77,26 @@ def update_pelicula(db: Session, pelicula_id: int, pelicula_update: PeliculaUpda
     db_pelicula = get_pelicula(db, pelicula_id)
 
     update_data = pelicula_update.model_dump(exclude_unset=True)
+    if "titulo" in update_data:
+        pelicula_existente = db.query(Pelicula).filter(
+            Pelicula.titulo == update_data["titulo"],
+            Pelicula.id != pelicula_id
+        ).first()
+        if pelicula_existente:
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Ya existe otra película con ese título")
 
     if "id_director" in update_data:
         director_exists = db.query(Director).filter(Director.id == update_data["id_director"]).first()
         if not director_exists:
-            raise HTTPException(status_code=404, detail="El nuevo Director no existe")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="El nuevo Director no existe")
     if "generos" in update_data:
         generos_ids = update_data.pop("generos") # Sacamos genéros del dict para tratarlos manual
         if generos_ids is not None:
-             db_generos = db.query(Genero).filter(Genero.id.in_(generos_ids)).all()
-             if len(db_generos) != len(generos_ids):
-                 raise HTTPException(status_code=404, detail="Uno o más géneros no existen")
-             
-             db_pelicula.generos = db_generos 
+            db_generos = db.query(Genero).filter(Genero.id.in_(generos_ids)).all()
+            if len(db_generos) != len(generos_ids):
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Uno o más géneros no existen")
+            
+            db_pelicula.generos = db_generos 
 
     for key, value in update_data.items():
         setattr(db_pelicula, key, value)

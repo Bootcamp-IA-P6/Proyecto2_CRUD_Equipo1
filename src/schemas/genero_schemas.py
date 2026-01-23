@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class GeneroBase(BaseModel):
     nombre:str
@@ -7,7 +8,7 @@ class GeneroCreate(GeneroBase):
     pass
 
 class GeneroUpdate(GeneroBase):
-    pass
+    nombre: Optional[str] = None
 
 class GeneroResponse(GeneroBase):
     id: int
