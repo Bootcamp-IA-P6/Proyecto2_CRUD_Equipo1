@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from src.models.peliculas_models import Director
 from src.schemas.directores_schemas import DirectorCreate, DirectorUpdate
-
+from typing import List
 # --- CREATE ---
 def create_director(db: Session, director: DirectorCreate):
     
@@ -14,6 +14,25 @@ def create_director(db: Session, director: DirectorCreate):
     db.commit()
     db.refresh(new_director)
     return new_director
+
+
+def create_directores_bulk(db: Session, directores: List[DirectorCreate]):
+    nuevos_directores = []
+
+    for director in directores:
+        nuevo = Director(
+            nombre=director.nombre,
+            anio_nacimiento=director.anio_nacimiento
+        )
+        db.add(nuevo)
+        nuevos_directores.append(nuevo)
+
+    db.commit()
+
+    for director in nuevos_directores:
+        db.refresh(director)
+
+    return nuevos_directores
 
 # --- GET ONE ---
 def get_director(db: Session, director_id: int):
