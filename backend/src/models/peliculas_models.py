@@ -25,6 +25,7 @@ class Pelicula(Base):
     titulo = Column(String(100), index=True, nullable=False)
     anio = Column(Integer)
     descripcion = Column(String(200))
+    poster_url = Column(String(255), nullable=True)
 
     director = relationship("Director", back_populates="peliculas")
     generos = relationship(
