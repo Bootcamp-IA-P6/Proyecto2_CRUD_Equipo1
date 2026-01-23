@@ -1,5 +1,0 @@
-feat(api): implement bulk create endpoints for movies and directors
-
-- Added POST /peliculas/bulk and POST /directores/bulk endpoints
-- Enabled list-based payloads for bulk insertion
-- Kept single-create endpoints unchanged
