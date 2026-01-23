@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from fastapi import HTTPException, status
 from src.models.peliculas_models import Pelicula, Director, Genero
 from src.schemas.peliculas_schemas import PeliculaCreate, PeliculaUpdate
@@ -13,7 +13,8 @@ def create_pelicula(db: Session, pelicula: PeliculaCreate):
         titulo=pelicula.titulo,
         anio=pelicula.anio,
         descripcion=pelicula.descripcion,
-        id_director=pelicula.id_director
+        id_director=pelicula.id_director,
+        poster_url=pelicula.poster_url  # ← NUEVO
     )
 
     if pelicula.generos:
@@ -31,14 +32,22 @@ def create_pelicula(db: Session, pelicula: PeliculaCreate):
 
 # --- READ ONE ---
 def get_pelicula(db: Session, pelicula_id: int):
-    pelicula = db.query(Pelicula).filter(Pelicula.id == pelicula_id).first()
+    pelicula = db.query(Pelicula).options(
+        joinedload(Pelicula.director),
+        joinedload(Pelicula.generos)
+    ).filter(Pelicula.id == pelicula_id).first()
+    
     if not pelicula:
         raise HTTPException(status_code=404, detail="Película no encontrada")
     return pelicula
 
 # --- READ ALL ---
 def get_all_peliculas(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(Pelicula).offset(skip).limit(limit).all()
+    # ← NUEVO: Usar joinedload para cargar relaciones
+    return db.query(Pelicula).options(
+        joinedload(Pelicula.director),
+        joinedload(Pelicula.generos)
+    ).offset(skip).limit(limit).all()
 
 # --- UPDATE (PATCH) ---
 def update_pelicula(db: Session, pelicula_id: int, pelicula_update: PeliculaUpdate):
@@ -50,14 +59,14 @@ def update_pelicula(db: Session, pelicula_id: int, pelicula_update: PeliculaUpda
         director_exists = db.query(Director).filter(Director.id == update_data["id_director"]).first()
         if not director_exists:
             raise HTTPException(status_code=404, detail="El nuevo Director no existe")
+    
     if "generos" in update_data:
-        generos_ids = update_data.pop("generos") # Sacamos genéros del dict para tratarlos manual
+        generos_ids = update_data.pop("generos")
         if generos_ids is not None:
-             db_generos = db.query(Genero).filter(Genero.id.in_(generos_ids)).all()
-             if len(db_generos) != len(generos_ids):
-                 raise HTTPException(status_code=404, detail="Uno o más géneros no existen")
-             
-             db_pelicula.generos = db_generos 
+            db_generos = db.query(Genero).filter(Genero.id.in_(generos_ids)).all()
+            if len(db_generos) != len(generos_ids):
+                raise HTTPException(status_code=404, detail="Uno o más géneros no existen")
+            db_pelicula.generos = db_generos
 
     for key, value in update_data.items():
         setattr(db_pelicula, key, value)
@@ -70,7 +79,6 @@ def update_pelicula(db: Session, pelicula_id: int, pelicula_update: PeliculaUpda
 # --- DELETE ---
 def delete_pelicula(db: Session, pelicula_id: int):
     db_pelicula = get_pelicula(db, pelicula_id)
-    
     db.delete(db_pelicula)
     db.commit()
     return db_pelicula
