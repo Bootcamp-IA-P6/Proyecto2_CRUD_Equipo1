@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from src.database.database import get_db
 from src.controllers import genero_controller
@@ -14,7 +14,10 @@ def get_generos(db: Session = Depends(get_db)):
     404: {"description": "Género no encontrado"}
 })
 def get_genero(genero_id: int, db: Session = Depends(get_db)):
-    return genero_controller.get_genero_by_id(db, genero_id)
+    genero = genero_controller.get_genero_by_id(db, genero_id)
+    if not genero:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Género no encontrado")
+    return genero
 
 @router.post("/", response_model=GeneroResponse, status_code=status.HTTP_201_CREATED, responses={
     409: {"description": "Ya existe un género con ese nombre"},
@@ -29,12 +32,15 @@ def create_genero(genero: GeneroCreate, db: Session = Depends(get_db)):
     422: {"description": "Datos inválidos"}
 })
 def update_genero(genero_id: int, genero: GeneroUpdate, db: Session = Depends(get_db)):
-    return genero_controller.update_genero(db, genero_id, genero)
-    
+    genero_actualizado = genero_controller.update_genero(db, genero_id, genero)
+    if not genero_actualizado:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Género no encontrado")
+    return genero_actualizado
 
 @router.delete("/{genero_id}", status_code=status.HTTP_204_NO_CONTENT, responses={
     404: {"description": "Género no encontrado"}
-} )
+})
 def delete_genero(genero_id: int, db: Session = Depends(get_db)):
-    genero_controller.delete_genero(db, genero_id)
-    
+    genero_eliminado = genero_controller.delete_genero(db, genero_id)
+    if not genero_eliminado:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Género no encontrado")

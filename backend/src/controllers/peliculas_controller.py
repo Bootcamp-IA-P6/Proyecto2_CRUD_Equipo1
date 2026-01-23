@@ -10,15 +10,15 @@ def create_pelicula(db: Session, pelicula: PeliculaCreate):
     if not db_director:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Director no encontrado")
 
-# Verificar que No exista una pelicula con el mismo título
+    # Verificar que No exista una pelicula con el mismo título
     pelicula_existente = db.query(Pelicula).filter(
         Pelicula.titulo == pelicula.titulo
     ).first()
     if pelicula_existente:
         raise HTTPException(
-        status_code=status.HTTP_409_CONFLICT,
-        detail="Ya existe una película con ese título"
-    )
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Ya existe una película con ese título"
+        )
 
     new_pelicula = Pelicula(
         titulo=pelicula.titulo,
@@ -40,7 +40,7 @@ def create_pelicula(db: Session, pelicula: PeliculaCreate):
     db.refresh(new_pelicula)
     return new_pelicula
 
-def create_pelicula_bulk(db: Session, peliculas: List[create_pelicula]):
+def create_pelicula_bulk(db: Session, peliculas: List[PeliculaCreate]):
     nuevas_peliculas = []
 
     for pelicula in peliculas:
@@ -48,8 +48,9 @@ def create_pelicula_bulk(db: Session, peliculas: List[create_pelicula]):
             titulo=pelicula.titulo,
             anio=pelicula.anio,
             descripcion=pelicula.descripcion,
-            id_director=pelicula.id_director
-    )
+            id_director=pelicula.id_director,
+            poster_url=pelicula.poster_url
+        )
 
         db.add(new_pelicula)
         nuevas_peliculas.append(new_pelicula)
@@ -61,8 +62,6 @@ def create_pelicula_bulk(db: Session, peliculas: List[create_pelicula]):
 
     return nuevas_peliculas
 
-
-# --- READ ONE ---
 def get_pelicula(db: Session, pelicula_id: int):
     pelicula = db.query(Pelicula).options(
         joinedload(Pelicula.director),
@@ -81,11 +80,11 @@ def get_all_peliculas(db: Session, skip: int = 0, limit: int = 100):
         joinedload(Pelicula.generos)
     ).offset(skip).limit(limit).all()
 
-# --- UPDATE (PATCH) ---
 def update_pelicula(db: Session, pelicula_id: int, pelicula_update: PeliculaUpdate):
     db_pelicula = get_pelicula(db, pelicula_id)
 
     update_data = pelicula_update.model_dump(exclude_unset=True)
+    
     if "titulo" in update_data:
         pelicula_existente = db.query(Pelicula).filter(
             Pelicula.titulo == update_data["titulo"],
@@ -98,6 +97,7 @@ def update_pelicula(db: Session, pelicula_id: int, pelicula_update: PeliculaUpda
         director_exists = db.query(Director).filter(Director.id == update_data["id_director"]).first()
         if not director_exists:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="El nuevo Director no existe")
+    
     if "generos" in update_data:
         generos_ids = update_data.pop("generos")
         if generos_ids is not None:
