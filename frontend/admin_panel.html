@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Administración</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- SweetAlert2 (Para alertas bonitas) -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    
+    <style>
+        body { background-color: #f4f6f9; }
+        .sidebar { min-height: 100vh; background-color: #343a40; color: white; }
+        .nav-link { color: rgba(255,255,255,.8); }
+        .nav-link.active { background-color: #e50914 !important; color: white; }
+        .card-header { background-color: #343a40; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="d-flex">
+    <!-- Sidebar -->
+    <div class="d-flex flex-column flex-shrink-0 p-3 sidebar" style="width: 280px;">
+        <a href="index.html" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <span class="fs-4 fw-bold">Admin Panel</span>
+        </a>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto" id="adminTabs" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active w-100 text-start" data-bs-toggle="pill" data-bs-target="#peliculas-tab">
+                    <i class="fas fa-film me-2"></i> Películas
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link w-100 text-start" data-bs-toggle="pill" data-bs-target="#generos-tab">
+                    <i class="fas fa-tag me-2"></i> Géneros
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link w-100 text-start" data-bs-toggle="pill" data-bs-target="#directores-tab">
+                    <i class="fas fa-person me-2"></i> Directores
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link w-100 text-start" data-bs-toggle="pill" data-bs-target="#usuarios-tab">
+                    <i class="fas fa-users me-2"></i> Usuarios
+                </button>
+            </li>
+        </ul>
+        <hr>
+        <button onclick="logout()" class="btn btn-outline-danger w-100">Cerrar Sesión</button>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div class="container-fluid p-4">
+        
+        <div class="tab-content">
+            
+            <!-- PANEL PELÍCULAS -->
+            <div class="tab-pane fade show active" id="peliculas-tab">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Gestión de Películas</h2>
+                    <button class="btn btn-success" onclick="openCreateMovieModal()">
+                        <i class="fas fa-plus"></i> Nueva Película
+                    </button>
+                </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Póster</th>
+                                    <th>Título</th>
+                                    <th>Director</th>
+                                    <th>Géneros</th>
+                                    <th>Año</th>
+                                    <th class="text-end">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="movies-table-body">
+                                <!-- Se llena con JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL GÉNEROS -->
+            <div class="tab-pane fade" id="generos-tab">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Gestión de Géneros</h2>
+                    <button class="btn btn-success" onclick="openCreateGeneroModal()">
+                        <i class="fas fa-plus"></i> Nuevo Género
+                    </button>
+                </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th class="text-end">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="generos-table-body">
+                                <!-- Se llena con JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL DIRECTORES -->
+            <div class="tab-pane fade" id="directores-tab">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Gestión de Directores</h2>
+                    <button class="btn btn-success" onclick="openCreateDirectorModal()">
+                        <i class="fas fa-plus"></i> Nuevo Director
+                    </button>
+                </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Año Nacimiento</th>
+                                    <th class="text-end">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="directores-table-body">
+                                <!-- Se llena con JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL USUARIOS -->
+            <div class="tab-pane fade" id="usuarios-tab">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Gestión de Usuarios</h2>
+                </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Rol</th>
+                                    <th>Activo</th>
+                                    <th class="text-end">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usuarios-table-body">
+                                <!-- Se llena con JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ==================== MODALES ==================== -->
+
+<!-- MODAL PELÍCULAS (Crear / Editar) -->
+<div class="modal fade" id="movieModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="movieModalTitle">Nueva Película</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="movieForm">
+                    <input type="hidden" id="movieId">
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Título</label>
+                        <input type="text" class="form-control" id="movieTitulo" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Descripción</label>
+                        <textarea class="form-control" id="movieDescripcion" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Año</label>
+                        <input type="number" class="form-control" id="movieAnio">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Director</label>
+                        <select class="form-control" id="movieDirectorId" required>
+                            <option value="">Seleccionar director...</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Géneros</label>
+                        <input type="text" class="form-control" id="generosSearchInput" placeholder="Buscar o crear género...">
+                        <div id="generosSelectorContainer" style="margin-top: 10px; max-height: 200px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; padding: 8px; display: none;">
+                            <div id="generosList"></div>
+                            <button type="button" class="btn btn-sm btn-outline-success mt-2" id="addNewGeneroBtn" style="display: none;">
+                                <i class="fas fa-plus"></i> Agregar nuevo género
+                            </button>
+                        </div>
+                        <div id="generosSelectedTags" style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 5px;"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Póster (archivo)</label>
+                        <input type="file" class="form-control" id="moviePosterFile" accept="image/*">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="saveMovie()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL GÉNEROS (Crear / Editar) -->
+<div class="modal fade" id="generoModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="generoModalTitle">Nuevo Género</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="generoForm">
+                    <input type="hidden" id="generoId">
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="generoNombre" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="saveGenero()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DIRECTORES (Crear / Editar) -->
+<div class="modal fade" id="directorModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="directorModalTitle">Nuevo Director</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="directorForm">
+                    <input type="hidden" id="directorId">
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="directorNombre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Año Nacimiento</label>
+                        <input type="number" class="form-control" id="directorAnio">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="saveDirector()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL USUARIOS (Editar) -->
+<div class="modal fade" id="userModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="userModalTitle">Editar Usuario</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="userForm">
+                    <input type="hidden" id="userId">
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-control" id="userName" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="userEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Rol</label>
+                        <select class="form-control" id="userRole" required>
+                            <option value="user">Usuario</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="userActive">
+                        <label class="form-check-label" for="userActive">Activo</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="saveUser()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="js/common.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/admin.js"></script>
+<script>
+    async function loadMoviesTable() {
+        const tbody = document.getElementById('movies-table-body');
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center">Cargando datos...</td></tr>';
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/peliculas/`, {
+                headers: getAuthHeaders()
+            });
+
+            if (!response.ok) throw new Error("Error al cargar");
+
+            const movies = await response.json();
+            tbody.innerHTML = '';
+
+            movies.forEach(movie => {
+                // Extraer nombre del archivo de la ruta
+                const fileName = movie.poster_url 
+                    ? movie.poster_url.split('/').pop()
+                    : 'Sin imagen';
+                
+                const directorNombre = movie.director ? movie.director.nombre : 'Sin director';
+
+                const row = `
+                    <tr>
+                        <td>${movie.id}</td>
+                        <td>
+                            <span class="badge bg-info">${fileName}</span>
+                        </td>
+                        <td class="fw-bold">${movie.titulo}</td>
+                        <td>${directorNombre}</td>
+                        <td>${movie.anio || '-'}</td>
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-outline-primary me-1" onclick='openEditMovieModal(${JSON.stringify(movie)})'>
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteMovie(${movie.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+
+        } catch (error) {
+            console.error(error);
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Error de conexión</td></tr>';
+        }
+    }
+
+    // ...existing code...
+</script>
+</body>
+</html>
