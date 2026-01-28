@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CinemaStream - Catálogo</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* Estilos "Dark Cinema" */
+        body { background-color: #141414; color: #fff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+        
+        .navbar { background-color: transparent !important; transition: background-color 0.5s; padding: 1rem 2rem; }
+        .navbar.scrolled { background-color: #141414 !important; }
+        
+        .hero-section {
+            height: 80vh;
+            background: linear-gradient(to top, #141414, transparent), url('https://source.unsplash.com/1600x900/?movie,cinema');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .movie-card {
+            background-color: #1f1f1f;
+            border: none;
+            border-radius: 4px;
+            transition: transform 0.3s, z-index 0.3s;
+            position: relative;
+        }
+        
+        .movie-card:hover {
+            transform: scale(1.05);
+            z-index: 10;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            cursor: pointer;
+        }
+
+        .card-img-top { height: 400px; object-fit: cover; border-radius: 4px; }
+        .card-body { padding: 1rem; }
+        .btn-custom-red { background-color: #e50914; color: white; border: none; }
+        .btn-custom-red:hover { background-color: #b20710; color: white; }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold text-danger fs-3" href="#">CINEMASTREAM</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="ms-auto">
+                    <a href="login.html" class="btn btn-outline-danger me-2">Iniciar Sesión</a>
+                    <a href="admin_panel.html" class="btn btn-danger" id="adminBtn" style="display:none;">Admin</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Header -->
+    <header class="hero-section">
+        <div>
+            <h1 class="display-1 fw-bold">Películas ilimitadas</h1>
+            <p class="fs-5">Explora nuestro catálogo de películas</p>
+        </div>
+    </header>
+
+    <!-- Catálogo -->
+    <div class="container my-5">
+        <h3 class="mb-4 text-white">Tendencias ahora</h3>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4" id="movies-grid">
+            <div class="text-center w-100">
+                <p class="text-secondary">Cargando películas...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/catalog.js"></script>
+    
+    <script>
+        // Efecto scroll navbar
+        window.addEventListener('scroll', function() {
+            const nav = document.getElementById('mainNav');
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+
+        // Mostrar botón admin solo si es admin
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('access_token');
+            if (token) {
+                const user = parseJwt(token);
+                if (user && (user.role === 'admin' || user.is_superuser)) {
+                    document.getElementById('adminBtn').style.display = 'inline-block';
+                }
+            }
+            loadMovies();
+        });
+    </script>
+</body>
+</html>
